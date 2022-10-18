@@ -51,14 +51,7 @@ class AriticleListHandler(BaseHandler):
             catalog   = self.get_query_argument("catalog",   None)
             page      = self.get_query_argument("page",      "1")
             page_size = self.get_query_argument("page_size", "10")
-            """
-            print("status=",status)
-            print("search=",search)
-            print("tag=",tag)
-            print("catalog=",catalog)
-            print("page=",page)
-            print("page_size=",page_size)
-            """    
+ 
             articles = None
             sql = "select * from blog_article "
             params = []
@@ -142,15 +135,7 @@ class AriticleListHandler(BaseHandler):
             markdown = self.json_args.get("markdown", "")
             tags     = self.json_args.get("tags", [])
             catalog  = self.json_args.get("catalog", 0)
-            """
-            print("title,",title,type(title))
-            print("cover,",cover, type(cover),not cover)
-            print("excerpt,",excerpt,type(excerpt))
-            print("keyword,",keyword,type(keyword))
-            print("markdown,",markdown,type(markdown))
-            print("tags,",tags,type(tags))
-            print("catalog,",catalog,type(catalog))
-            """
+
             ret = self.dbUtil.select_one("select * from blog_article where title = %s", (title,))
             if ret:
                 return self.my_write_error({"detail": "标题已经存在！"}, 500)
@@ -227,15 +212,7 @@ class AriticleHandler(BaseHandler):
             markdown = self.json_args.get("markdown", "")
             tags     = self.json_args.get("tags", [])
             catalog  = self.json_args.get("catalog", 0)
-            """
-            print("title,",title,type(title))
-            print("cover,",cover, type(cover),not cover)
-            print("excerpt,",excerpt,type(excerpt))
-            print("keyword,",keyword,type(keyword))
-            print("markdown,",markdown,type(markdown))
-            print("tags,",tags,type(tags))
-            print("catalog,",catalog,type(catalog))
-            """
+
             self.dbUtil.update_operation("update blog_article set title=%s,cover=%s,excerpt=%s,keyword=%s,markdown=%s,catalog_id=%s where id=%s", 
                                          (title, cover, excerpt, keyword,markdown,catalog,int(article_id)))
             self.dbUtil.delete_operation("delete from article_tag where article_id=%s", (int(article_id),))            
@@ -460,7 +437,6 @@ class MessageListHandler(BaseHandler):
             params.append(int(page_size))
             params.append((int(page) - 1) * int(page_size))
             msgs = self.dbUtil.select_many(sql, params)
-       
         except Exception as ex:
             print("ex,", ex)
             return make_response({"detail": "内部错误"}, 500)
